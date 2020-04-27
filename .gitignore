@@ -1,0 +1,11 @@
+
+*.ipch
+*.opensdf
+C&C++/List/List/stdafx.cpp
+*.filters
+*.vcxproj
+*.suo
+*.sln
+*.sdf
+C&C++/List/List/stdafx.h
+C&C++/List/List/targetver.h
