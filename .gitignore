@@ -9,3 +9,12 @@ C&C++/List/List/stdafx.cpp
 *.sdf
 C&C++/List/List/stdafx.h
 C&C++/List/List/targetver.h
+*.pdb
+*.idb
+*.tlog
+*.obj
+*.obj
+*.pch
+*.log
+*.exe
+*.ilk
