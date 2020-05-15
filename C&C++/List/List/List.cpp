@@ -132,11 +132,18 @@ int insertAppend(const int data)
 }
 
 
+void swap(int arr[], int i, int j)
+{
+	int temp = arr[i];
+	arr[i] = arr[j];
+	arr[j] = temp;
+}
+
 //------------------------冒泡排序-------------------------------------
 //1>>基本思想--两个数比较大小，较大的数下沉，较小的数冒起来。
 //2>>过程--1.比较相邻的两个数据，如果后面的数小，就交换位置；
-//------2.从后向前两两比较，一直到比较最前两个数据。
-//------3.继续重复上述过程，依次将第2.3...n-1个最小数排好位置
+//---------2.从后向前两两比较，一直到比较最前两个数据。
+//---------3.继续重复上述过程，依次将第2.3...n-1个最小数排好位置
 //3>>时间复杂度O(N²)
 //4>>优化方案--设置flag，如果在当前一轮比较后，数据没有发生交换则跳出循环
 void bubbleSort()
@@ -224,6 +231,197 @@ void insertSort()
 
 //----------------------OVER-------------------------------
 
+//----------------------希尔排序------------------------------
+//1>>基本思想与过程--1.在要排序的一组数据中，根据某一增量N将该组
+//--------------------数据若干个子序列，并对子序列进行插入排序
+//------------------2.然后逐渐减小增量N，并重复上述过程，直至增量
+//--------------------N=1，此时数据基本有序，最后再进行插入排序
+void shellSort()
+{
+	int incFlag = dataLen;
+	while (true)
+	{
+		incFlag = incFlag / 2;			//增量每次除以2
+		if (incFlag < 1)				//如果增量小于1则退出
+		{
+			break;
+		}
+
+		for (int k = 0; k < incFlag; ++k)							//分为incFlag个子序列，要对其循环incFalg次，每次对每个子序列进行排序
+		{
+			for (int i = k + incFlag; i < dataLen; i += incFlag)	//对每个子序列进行插入排序
+			{
+				for (int j = i; j > k; j -= incFlag)
+				{
+					if (nums[j] < nums[j - incFlag])				//对第j个和j-incFlag数据进行对比
+					{
+						auto temp = nums[j - incFlag];
+						nums[j - incFlag] = nums[j];
+						nums[j] = temp;
+					}
+					//找到合适位置（小于后一个数，大于等于前面一个数），退出当前循环
+					else
+					{
+						break;
+					}
+				}
+			}
+		}
+	}
+}
+//----------------------OVER----------------------------------
+
+//----------------------快速排序------------------------------
+//1>>基本思想--1.先从数列中取出一个数作为key
+//------------2.将比这个数小的数全部放在它的左边，大于或等于它的数全部放在它的右边
+//------------3.对左右两个小数列重复第二步，直至各区间只有一个数
+//--------------------N=1，此时数据基本有序，最后再进行插入排序
+//2>>平均时间复杂度：O(N*logN)
+
+void quickSort(int lFlag,  int rFlag)
+{
+	if (lFlag >= rFlag)
+	{
+		return;
+	}
+
+	int r = rFlag;
+	int l = lFlag;
+	int key = nums[lFlag];
+	while (r > l)
+	{
+		if (key < nums[l + 1])
+		{
+			int temp = nums[r];
+			nums[r] = nums[l + 1];
+			nums[l + 1] = temp;
+			r--;
+		}
+		else
+		{
+			nums[l] = nums[l + 1];
+			nums[l + 1] = key;
+			l++;
+		}
+
+		if (r == l)
+		{
+			quickSort(lFlag, l - 1);
+			quickSort(l + 1, rFlag);
+		}
+	}
+}
+//----------------------OVER----------------------------------
+
+//----------------------归并排序------------------------------
+//1>>基本思想--1.归并排序是建立在归并操作上的一种有效的排序算法。该算法是采用分治法的一个非常典型的应用。
+//------------2.基本思路就是将数组分成2组A，B，如果这2组组内的数据都是有序的，那么就可以很方便的将这2组数据进行排序。
+//------------3.虑下如何将2个有序数列合并。这个非常简单，只要从比较2个数列的第一个数，谁小就先取谁，
+//--------------取了后就在对应数列中删除这个数。然后再进行比较，如果有数列为空，那直接将另一个数列的数据依次取出即可。
+//------------4.可以将A，B组各自再分成2组。依次类推，当分出来的小组只有1个数据时，可以认为这个小组组内已经达到了有序，
+//--------------然后再合并相邻的2个小组就可以了。这样通过先递归的分解数列，再合并数列就完成了归并排序
+//2>>平均时间复杂度：O(N*logN)
+void memeryArray(int arr1[], int len1, int arr2[], int len2, int memeryArr[])
+{
+	if (len1 <= 0 || len2 <= 0)
+	{
+		return;
+	}
+	int i = 0, j = 0, k = 0;
+	int len = len1 + len2;
+	while (i < len1 || j < len2)
+	{
+		if (i >= len1)
+		{
+			memeryArr[k] = arr2[j];
+			++j;
+			++k;
+			continue;
+		}
+
+		if (j >= len2)
+		{
+			memeryArr[k] = arr1[i];
+			++i;
+			++k;
+			continue;
+		}
+
+		if (arr1[i] < arr2[j])
+		{
+			memeryArr[k] = arr1[i];
+			++i;
+		}
+		else
+		{
+			memeryArr[k] = arr2[j];
+			++j;
+		}
+		++k;
+	}
+}
+
+void mergeSort(int start, int end, int temp[])
+{
+	if (start == end)
+	{
+		temp[0] = nums[start];
+		return;
+	}
+
+	int mid = (start + end) / 2;
+	int *temp1 = new int[mid -start + 1];
+	mergeSort(start, mid, temp1);
+	int *temp2 = new int[end - mid];
+	mergeSort(mid + 1, end, temp2);
+	memeryArray(temp1, mid - start + 1, temp2, end - mid, temp);
+}
+//--------------------------OVER----------------------------------  
+
+//----------------------堆排序------------------------------
+//1>>基本思想--1.利用堆这种数据结构所设计的一种排序算法。堆可以看成是一个完全二叉树，堆顶元素是整棵树中最大值。
+//------------2.将N个数据数列变成堆结构后，将堆顶元素取出，与第N个数据进行交换。
+//------------3.然后对N-1个数据以前的数据变成堆结构，重复第2步，直至数列数据个数N=1。
+//--------------取了后就在对应数列中删除这个数。然后再进行比较，如果有数列为空，那直接将另一个数列的数据依次取出即可。
+//2>>堆的定义--N个序列元素(A1, A2, A3......An-1, An);满足以下一个关系则为堆结构
+//------------1.最小化堆--> Ai <= A2i 并且 Ai <= A2i+1
+//------------1.最大化堆--> Ai >= A2i 并且 Ai >= A2i+1
+//3>>平均时间复杂度：O(N*logN)
+void changeMaxHeap(int arr[], int index, int len)
+{
+	int lChildIndex = index * 2 + 1;
+	int rChildIndex = index * 2 + 2;
+	
+	if (lChildIndex < len && arr[index] < arr[lChildIndex])
+	{
+		swap(arr, index, lChildIndex);
+	}
+
+	if (rChildIndex < len && arr[index] < arr[rChildIndex])
+	{
+		swap(arr, index, rChildIndex);
+	}
+}
+
+void buildMaxHeap(int arr[], int len)
+{
+	for (int i = len / 2; i >= 0; --i)
+	{
+		changeMaxHeap(arr, i, len);
+	}
+}
+
+void heapSort(int arr[], int len)
+{
+	if (len > 1)
+	{
+		buildMaxHeap(arr, len);
+		swap(arr, 0, len - 1);
+		heapSort(arr, len - 1);
+	}
+}
+
+//--------------------------OVER----------------------------------  
 
 void testAppendData()
 {
@@ -262,15 +460,28 @@ void initTestData()
 	insertAppend(33);
 }
 
+void changeArrData(int arr[])
+{
+	arr[0] = 100;
+}
+
 void testSort()
 {
-	//insertAppend(68);
-	//insertAppend(33);
-	initTestData();
+	insertAppend(68);
+	insertAppend(33);
+	insertAppend(1);
+	//insertAppend(88);
+	//initTestData();
 	printMyList();
 	//bubbleSort();
 	//selectionSort();
-	insertSort();
+	//insertSort();
+	//shellSort();
+	//quickSort(0, 1);
+	//int temp[9] = { 0 };
+	//mergeSort(0, dataLen - 1, temp);
+	//printListElement(temp, 9, sizeof(int), printIntElement);
+	heapSort(nums, dataLen);
 	printMyList();
 }
 
@@ -278,6 +489,17 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	//testPrependData();
 	//testAppendData();
+	int a = 10;
+	int b = 8;
+	if (a > b)
+	{
+		a = 100;
+	}
+	else
+	{
+		b = 100;
+	}
+
 	testSort();
 	system("pause");
 	return 0;
