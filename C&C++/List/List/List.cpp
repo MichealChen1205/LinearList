@@ -208,7 +208,7 @@ void selectionSort()
 //------------2.当n = 3时时候 将当前数插入到前面2个数形成的有序数列中形成新的3个数有序数列
 //------------3.当n = k的时候 将当前数插入到前面k-1个数形成的有序数列中形成新的kge数的有序数列
 //------------4.重复以上步骤当n = n-1时排序完成
-void insertSort()
+void insertSort(int nums[], int dataLen)
 {
 	for (int i = 0; i < dataLen - 1; ++i)
 	{
@@ -423,6 +423,148 @@ void heapSort(int arr[], int len)
 
 //--------------------------OVER----------------------------------  
 
+//----------------------堆排序------------------------------
+//1>>基本思想--1.计数排序必须要求数据序列中的数据是有确定范围的整数，例如分数是0-100分
+//------------2.将数据序列中的数据转换成数组的下标存储到额外开辟的空间中。
+//2>>堆的定义--1.找出数据序列中最大和最小元素
+//-------------2.申请一块内存，内存大小为（最大数值-最小数值）*数据长度
+//-------------3.统计数据序列中数据为N的元素出现的次数c，将c存放在第N项的新链表中
+//-------------4.按顺序遍历新的链表，每拿出对应第N项的数据，则次数-1，直到c=0继续下一项。
+//3>>平均时间复杂度：O(N)
+
+void countSort(int arr[], int arrLen, int minVal, int maxVal)
+{
+	int len = maxVal - minVal + 1;
+	int *newArr = new int[len]();
+	for (int i = 0; i < arrLen; ++i)
+	{
+		++newArr[arr[i] - minVal];
+	}
+
+	int arrIndex = 0;
+	for (int j = 0; j < len; j++)
+	{
+		while (newArr[j] > 0)
+		{
+			arr[arrIndex++] = j + minVal;
+			--newArr[j];
+		}
+	}
+	delete newArr;
+}
+//--------------------------OVER----------------------------------  
+
+
+//-------------------------桶排序----------------------------------
+void bucketSort(int arr[], const int arrLen, int bucketSize)
+{
+	if (arrLen <= 1)
+	{
+		return;
+	}
+
+	int minVal = arr[0];
+	int maxVal = arr[0];
+	for (int i = 1; i < arrLen; ++i)
+	{
+		if (arr[i] < minVal)
+		{
+			minVal = arr[i];
+		}
+		if (arr[i] > maxVal)
+		{
+			maxVal = arr[i];
+		}
+	}
+
+	int diff = maxVal - minVal;
+	int bucketCnt = diff / bucketSize + 1;
+	int *bucketArr = new int[bucketCnt*arrLen]();
+	int *flag = new  int[bucketCnt]();
+
+
+		//int index = (arr[i] - minVal) / bucketSize;
+		//bucketArr[index*arrLen + flag[index]] = arr[i];
+		//++flag[index];
+	int id = 0;
+	for (int j = 0; j < bucketCnt; ++j)
+	{
+		for (int i = 0; i < arrLen; i++)
+		{
+			if (arr[i] >= minVal + j*bucketSize && arr[i] < minVal + (j + 1)*bucketSize)
+			{
+				bucketArr[id] = arr[i];
+				++flag[j];
+				++id;
+			}
+		}
+	}
+
+	int start = 0;
+	id = 0;
+	for (int j = 0; j < bucketCnt; j++)
+	{
+		insertSort(bucketArr + start, flag[j]);
+		for (int i = 0; i < flag[j]; i++)
+		{
+			arr[id] = bucketArr[i + start];
+			++id;
+		}
+		start += flag[j];
+	}
+
+
+	/*int index = 0;
+	for (int j = 0; j < bucketCnt; j++)
+	{
+		insertSort(bucketArr + arrLen*j, arrLen);
+		for (int i = 0; i < arrLen; i++)
+		{
+			if (bucketArr[arrLen*j + i] != 0)
+			{
+				arr[index] = bucketArr[arrLen*j + i];
+				++index;
+			}
+		}
+	}*/
+	delete bucketArr;
+	delete flag;
+}
+//--------------------------OVER----------------------------------  
+
+//--------------------------基数排序----------------------------------  
+void radixSort(int arr[], int arrLen)
+{
+	int mod = 10;
+	int *arr1 = new int[10]();
+	int index = 0;
+	for (int i = 0; i < mod; ++i)
+	{
+		for (int j = 0; j < arrLen; ++j)
+		{
+			if (arr[j] % mod == i)
+			{
+				arr1[index] = arr[j];
+				++index;
+			}
+		}
+	}
+
+	index = 0;
+	for (int i = 0; i < mod; ++i)
+	{
+		for (int j = 0; j < arrLen; ++j)
+		{
+			if (arr1[j] / mod == i)
+			{
+				arr[index] = arr1[j];
+				++index;
+			}
+		}
+	}
+}
+//--------------------------OVER----------------------------------  
+
 void testAppendData()
 {
 	int res = 0;
@@ -451,7 +593,7 @@ void initTestData()
 {
 	insertAppend(68);
 	insertAppend(33);
-	insertAppend(108);
+	insertAppend(99);
 	insertAppend(42);
 	insertAppend(5);
 	insertAppend(12);
@@ -467,11 +609,11 @@ void changeArrData(int arr[])
 
 void testSort()
 {
-	insertAppend(68);
-	insertAppend(33);
-	insertAppend(1);
+	//insertAppend(68);
+	//insertAppend(33);
+	//insertAppend(1);
 	//insertAppend(88);
-	//initTestData();
+	initTestData();
 	printMyList();
 	//bubbleSort();
 	//selectionSort();
@@ -481,7 +623,10 @@ void testSort()
 	//int temp[9] = { 0 };
 	//mergeSort(0, dataLen - 1, temp);
 	//printListElement(temp, 9, sizeof(int), printIntElement);
-	heapSort(nums, dataLen);
+	//heapSort(nums, dataLen);
+	///countSort(nums, 9, 5, 99);
+	bucketSort(nums, 9, 10);
+	//radixSort(nums, 9);
 	printMyList();
 }
 

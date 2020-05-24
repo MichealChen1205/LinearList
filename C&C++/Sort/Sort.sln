@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ArraySort", "ArraySort\ArraySort.vcxproj", "{115AF11E-2382-4F6E-AB45-B3B242F88129}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ListSort", "ListSort\ListSort.vcxproj", "{596F24C1-D581-4F8C-A7C0-3E442A287D22}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{115AF11E-2382-4F6E-AB45-B3B242F88129}.Debug|Win32.ActiveCfg = Debug|Win32
+		{115AF11E-2382-4F6E-AB45-B3B242F88129}.Debug|Win32.Build.0 = Debug|Win32
+		{115AF11E-2382-4F6E-AB45-B3B242F88129}.Release|Win32.ActiveCfg = Release|Win32
+		{115AF11E-2382-4F6E-AB45-B3B242F88129}.Release|Win32.Build.0 = Release|Win32
+		{596F24C1-D581-4F8C-A7C0-3E442A287D22}.Debug|Win32.ActiveCfg = Debug|Win32
+		{596F24C1-D581-4F8C-A7C0-3E442A287D22}.Debug|Win32.Build.0 = Debug|Win32
+		{596F24C1-D581-4F8C-A7C0-3E442A287D22}.Release|Win32.ActiveCfg = Release|Win32
+		{596F24C1-D581-4F8C-A7C0-3E442A287D22}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
