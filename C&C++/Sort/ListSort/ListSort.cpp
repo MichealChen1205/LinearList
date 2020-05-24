@@ -264,6 +264,16 @@ void shellSort(LinkNode head)
 }
 
 //5.¿ìËÙÅÅÐò
+LinkNode findTail(LinkNode head)
+{
+	LinkNode head1 = head;
+	while (head1->next)
+	{
+		head1 = head1->next;
+	}
+	return head1;
+}
+
 void quickSort(LinkNode head, LinkNode tail)
 {
 	if (head == NULL || tail == NULL)
@@ -277,11 +287,32 @@ void quickSort(LinkNode head, LinkNode tail)
 	}
 
 	LinkNode KeyNode = head;
+	LinkNode midNext = tail;
+	LinkNode midPre = head;
 	int key = head->data;
 
+	while (KeyNode != midNext)
+	{
+		if (key < KeyNode->next->data)
+		{
+			swap(KeyNode->next, midNext);
+			LinkNode node = KeyNode;
+			while (node->next != midNext)
+			{
+				node = node->next;
+			}
+			midNext = node;
+		}
+		else
+		{
+			swap(KeyNode, KeyNode->next);
+			midPre = KeyNode;
+			KeyNode = KeyNode->next;
+		}
+	}
 
-
-	
+	quickSort(head, midPre);
+	quickSort(midNext->next, tail);
 }
 
 LinkNode createNode(int data)
@@ -309,7 +340,7 @@ LinkNode initTestData()
 	int arr[] = {68, 16,99, 32, 6, 77, 43, 88, 22};
 	LinkNode node = NULL;
 	LinkNode head = NULL;
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 9; i++)
 	{
 		if (i == 0)
 		{
@@ -335,7 +366,8 @@ void testSort()
 	//selectionSort(head);
 	//insertSort(head);
 	//insertSort_SwapData(head);
-	shellSort(head);
+	//shellSort(head);
+	quickSort(head, findTail(head));
 	printData(head);
 	free(head);
 	head = NULL;
